@@ -191,7 +191,7 @@ public class AuthController {
     	
     	userRepository.save(vt.getUser());
     	
-    	return new ResponseEntity(new ApiResponse(true, "Accound verified sucessfuly. Thank you you can now login"),
+    	return new ResponseEntity(new ApiResponse(true, "Account verified sucessfuly. Thank you, you can now login"),
                 HttpStatus.OK);
     }
     
