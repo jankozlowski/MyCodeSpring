@@ -15,9 +15,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -28,12 +33,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "code_log")
 public class CodeLog extends DateAudit {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "log_id", unique = true, nullable = false)
 	private long logId;
 	private String duration;
+	
+	
 	@ElementCollection
 	@CollectionTable(
 	        name="date_click", joinColumns=@javax.persistence.JoinColumn(name="log_id")
@@ -53,7 +61,7 @@ public class CodeLog extends DateAudit {
 	private Set<Language> language = new HashSet<>();
 	
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	

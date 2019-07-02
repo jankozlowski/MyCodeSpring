@@ -30,6 +30,8 @@ import com.binaryalchemist.programondo.mail.EmailServiceImpl;
 import com.binaryalchemist.programondo.models.ApiResponse;
 import com.binaryalchemist.programondo.models.Role;
 import com.binaryalchemist.programondo.models.User;
+import com.binaryalchemist.programondo.models.UserDetails;
+import com.binaryalchemist.programondo.constants.Constants;
 import com.binaryalchemist.programondo.models.login.JwtAuthenticationResponse;
 import com.binaryalchemist.programondo.models.login.LoginRequest;
 import com.binaryalchemist.programondo.models.login.PasswordChangeRequest;
@@ -39,6 +41,7 @@ import com.binaryalchemist.programondo.models.login.TokenRequest;
 import com.binaryalchemist.programondo.models.login.VerificationToken;
 import com.binaryalchemist.programondo.repositories.PasswordTokenRepository;
 import com.binaryalchemist.programondo.repositories.RoleRepository;
+import com.binaryalchemist.programondo.repositories.UserDetailsRepository;
 import com.binaryalchemist.programondo.repositories.UserRepository;
 import com.binaryalchemist.programondo.repositories.VerificationTokenRepository;
 import com.binaryalchemist.programondo.security.JwtTokenProvider;
@@ -58,6 +61,9 @@ public class AuthController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserDetailsRepository userDetailsRepository;
+    
     @Autowired
     RoleRepository roleRepository;
 
@@ -139,8 +145,17 @@ public class AuthController {
          //       .orElseThrow(() -> new AppException("User Role not set."));
 
         user.setRoles(Collections.singleton(userRole));
-
+        
         User result = userRepository.save(user);
+        
+        UserDetails userDetails = new UserDetails();
+        userDetails.setBirthday("");
+        userDetails.setCity("");
+        userDetails.setCountry("");
+        userDetails.setOccupation("");
+        userDetails.setUser(result);
+        userDetailsRepository.save(userDetails);
+        
 
         VerificationToken vt = new VerificationToken();
         vt.setUser(user);
@@ -149,7 +164,7 @@ public class AuthController {
         
         VerificationToken resultToken = verificationTokenRepository.save(vt);
         
-        String link = "http://localhost:3000/verification?tokenId="+resultToken.getId()+"&token=" + token;        
+        String link = Constants.frontEndUrl+"verification?tokenId="+resultToken.getId()+"&token=" + token;        
         
         mail.sendSimpleMessage(user.getEmail(), "Programondo Activation", "Hi thank you for creating account in Programondo to activate your account please click on this link: " + link);
         
@@ -215,7 +230,7 @@ public class AuthController {
          
         VerificationToken resultToken = verificationTokenRepository.save(vt);
           
-        String link = "http://localhost:3000/verification?tokenId="+resultToken.getId()+"&token=" + token;        
+        String link =  Constants.frontEndUrl+"verification?tokenId="+resultToken.getId()+"&token=" + token;        
           
         mail.sendSimpleMessage(vt.getUser().getEmail(), "Programondo Activation", "Hi You required a new verification token to activate your account please click on this link: " + link);   	
     	
@@ -250,7 +265,7 @@ public class AuthController {
          
         PasswordToken resultToken =  passwordTokenRepository.save(pt);
           
-        String link = "http://localhost:3000/changePassword?tokenId="+resultToken.getId()+"&token=" + token;        
+        String link =  Constants.frontEndUrl+"changePassword?tokenId="+resultToken.getId()+"&token=" + token;        
           
         mail.sendSimpleMessage(pt.getUser().getEmail(), "Programondo Password Reset", "Hi You required a new password to your account. Please click on this link: " + link);   	
     	
@@ -285,6 +300,7 @@ public class AuthController {
                  HttpStatus.OK);
     	
     }
+    
     
     public void GenerateVerificationTokenData(VerificationToken vt, String token){
     	

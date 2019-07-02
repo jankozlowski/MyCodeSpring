@@ -195,7 +195,7 @@
 				canvas.style.position = acanvas.style.position = "absolute";
 				canvas.style.top = acanvas.style.top = "0";
 				canvas.style.left = acanvas.style.left = "0";
-				canvas.style.zIndex = 1000000;
+				canvas.style.zIndex = 100;
 				if(!this.get("visible"))
 					canvas.style.display = "none";
 

@@ -42,6 +42,8 @@ public class Project {
 	@OneToMany(mappedBy="project")
 	@JsonIgnoreProperties("project")
 	private Set<ProjectTask> tasks = new HashSet<>();
+	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;

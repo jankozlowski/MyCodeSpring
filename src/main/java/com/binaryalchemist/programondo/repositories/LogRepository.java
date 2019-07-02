@@ -19,5 +19,5 @@ public interface LogRepository  extends CrudRepository<CodeLog, Long> {
 	Iterable<CodeLog> findByUserName(String user);
 	@Query("select c from CodeLog c where c.user.name = :user and c.createdAt between :startDate and :endDate")
 	Iterable<CodeLog> findByUserNameAndDate(@Param("user")String user, @Param("startDate")Instant startDate, @Param("endDate")Instant endDate);
-
+	void deleteById(long id);
 }

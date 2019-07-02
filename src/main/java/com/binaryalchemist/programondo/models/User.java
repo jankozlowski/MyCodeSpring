@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -74,8 +75,16 @@ public class User extends DateAudit {
 	@JsonIgnoreProperties("user")
 	private Set<Project> projects = new HashSet<>();
 	
+	@OneToMany(mappedBy="user")
+	@JsonIgnoreProperties("user")
+	private Set<CodeLog> codeLogs;
 	
-	//@OneToMany(mappedBy="user")
-//	private Set<CodingLog> codingLogs;
+	@ManyToOne
+	@JoinColumn(name = "group_id")
+	private MaterialGroup materialGroup;
+	
+	@OneToOne(mappedBy="user")
+	@JsonIgnoreProperties("user")
+	private UserDetails userDetails;
 	
 }
